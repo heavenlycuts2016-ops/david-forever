@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>To My Dingus — From Your Baby, Serena</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── LOCK SCREEN ── */
+    #lock-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: linear-gradient(135deg, #1a1a2e 0%, #2d1b33 60%, #1a1a2e 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 2rem;
+    }
+    #lock-screen.hidden { display: none; }
+    .lock-box {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(201,168,76,0.35);
+      border-radius: 20px;
+      padding: 3rem 2.5rem;
+      max-width: 460px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .lock-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: #fff;
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+    .lock-title em { color: #c9a84c; font-style: italic; }
+    .lock-sub {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: rgba(255,255,255,0.6);
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+    #lockInput {
+      width: 100%;
+      padding: 0.9rem 1.2rem;
+      border-radius: 10px;
+      border: 2px solid rgba(201,168,76,0.4);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      text-align: center;
+      letter-spacing: 0.1em;
+      outline: none;
+      margin-bottom: 1rem;
+      transition: border-color 0.3s;
+    }
+    #lockInput::placeholder { color: rgba(255,255,255,0.3); }
+    #lockInput:focus { border-color: #c9a84c; }
+    #lockBtn {
+      width: 100%;
+      padding: 0.9rem;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #c9a84c, #a07830);
+      color: #1a1a2e;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: opacity 0.2s;
+    }
+    #lockBtn:hover { opacity: 0.88; }
+    #lockError {
+      color: #e07070;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      margin-top: 0.8rem;
+      min-height: 1.2rem;
+    }
+    .lock-hearts {
+      color: #c9a84c;
+      font-size: 1.4rem;
+      letter-spacing: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    :root {
+      --gold: #c9a84c;
+      --cream: #fdf6ec;
+      --dark: #1a1a2e;
+      --rose: #8b3a52;
+      --text: #2c2c2c;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: url('hero_couple.jpg') center/cover no-repeat;
+      filter: brightness(0.4);
+      z-index: 0;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(26,26,46,0.4) 0%, rgba(139,58,82,0.3) 100%);
+      z-index: 1;
+    }
+    .hero-content { position: relative; z-index: 2; padding: 2rem; }
+    .hero-eyebrow {
+      font-family: 'Lato', sans-serif;
+      font-weight: 300;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-size: 0.85rem;
+      margin-bottom: 1.2rem;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      color: #fff;
+      line-height: 1.15;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.6);
+      margin-bottom: 1rem;
+    }
+    .hero h1 em { color: var(--gold); font-style: italic; }
+    .hero-sub {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: rgba(255,255,255,0.88);
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      max-width: 640px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+    .scroll-hint {
+      color: rgba(255,255,255,0.55);
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    /* ── SECTION BASE ── */
+    section { padding: 5rem 1.5rem; }
+    .container { max-width: 780px; margin: 0 auto; }
+
+    .section-label {
+      font-family: 'Lato', sans-serif;
+      font-weight: 300;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-size: 0.78rem;
+      margin-bottom: 0.8rem;
+      text-align: center;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--dark);
+      text-align: center;
+      margin-bottom: 2.5rem;
+      line-height: 1.3;
+    }
+    .section-title em { color: var(--rose); font-style: italic; }
+
+    /* ── STORY CARDS ── */
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    .story-card {
+      background: #fff;
+      border-left: 4px solid var(--gold);
+      border-radius: 0 12px 12px 0;
+      padding: 2rem 2rem 2rem 2.5rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+      position: relative;
+    }
+    .story-card .year {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      color: var(--gold);
+      opacity: 0.2;
+      position: absolute;
+      top: 1rem; right: 1.5rem;
+      font-weight: 700;
+    }
+    .story-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      color: var(--dark);
+      margin-bottom: 0.8rem;
+    }
+    .story-card p {
+      font-size: 1.05rem;
+      line-height: 1.9;
+      color: #444;
+    }
+
+    /* ── LETTER ── */
+    .letter-section {
+      background: linear-gradient(135deg, #1a1a2e 0%, #2d1b33 100%);
+      color: #fff;
+    }
+    .letter-section .section-title { color: #fff; }
+    .letter-section .section-label { color: var(--gold); }
+    .letter-body {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 16px;
+      padding: 3rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.08rem;
+      line-height: 2;
+      color: rgba(255,255,255,0.92);
+    }
+    .letter-body p { margin-bottom: 1.6rem; }
+    .letter-body p:last-child { margin-bottom: 0; }
+    .letter-body .signature {
+      font-style: italic;
+      color: var(--gold);
+      font-size: 1.3rem;
+      margin-top: 2rem;
+      text-align: right;
+    }
+
+    /* ── CARRIAGE IMAGE ── */
+    .carriage-section {
+      background: #fff;
+      text-align: center;
+    }
+    .carriage-img {
+      width: 100%;
+      max-width: 580px;
+      border-radius: 16px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+      margin: 0 auto 1.5rem;
+      display: block;
+    }
+    .carriage-caption {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--rose);
+      font-size: 1.1rem;
+      line-height: 1.7;
+    }
+
+    /* ── MUSIC PLAYER ── */
+    .music-section {
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #fff;
+    }
+    .music-section .section-title { color: #fff; }
+    .music-section .section-label { color: var(--gold); }
+    .playlist {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .track {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .track-label {
+      padding: 1rem 1.5rem 0.6rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: var(--gold);
+      font-style: italic;
+      line-height: 1.6;
+    }
+    .track iframe {
+      width: 100%;
+      height: 80px;
+      border: none;
+      display: block;
+    }
+
+    /* ── PROMISE ── */
+    .promise-section {
+      background: var(--cream);
+      text-align: center;
+    }
+    .promise-text {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+      line-height: 2.1;
+      color: var(--dark);
+      max-width: 680px;
+      margin: 0 auto 2rem;
+    }
+    .promise-text strong { color: var(--rose); }
+
+    /* ── HEART DIVIDER ── */
+    .heart-divider {
+      text-align: center;
+      padding: 1.5rem 0;
+      font-size: 1.3rem;
+      color: var(--rose);
+      letter-spacing: 1rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+      padding: 3rem 1.5rem;
+      font-size: 0.9rem;
+    }
+    footer .footer-heart {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--gold);
+      font-size: 1.3rem;
+      display: block;
+      margin-bottom: 0.6rem;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 600px) {
+      .letter-body { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ LOCK SCREEN ══ -->
+<div id="lock-screen">
+  <div class="lock-box">
+    <div class="lock-hearts">♥ ♥ ♥</div>
+    <h1 class="lock-title">This is for <em>you</em>,<br/>David</h1>
+    <p class="lock-sub">Only one person in this world knows the word that opens this.<br/>If that is you — type it below.</p>
+    <input id="lockInput" type="text" placeholder="Enter the word..." autocomplete="off" />
+    <button id="lockBtn" onclick="checkWord()">Open the Letter ♥</button>
+    <p id="lockError"></p>
+  </div>
+</div>
+
+<script>
+function checkWord() {
+  var val = document.getElementById('lockInput').value.trim().toLowerCase();
+  if (val === 'forever') {
+    document.getElementById('lock-screen').classList.add('hidden');
+    document.body.style.overflow = '';
+  } else {
+    document.getElementById('lockError').textContent = 'That\'s not it, love. Try again. ♥';
+    document.getElementById('lockInput').value = '';
+    document.getElementById('lockInput').focus();
+  }
+}
+document.getElementById('lockInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') checkWord();
+});
+document.body.style.overflow = 'hidden';
+</script>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">A love letter &nbsp;·&nbsp; 21+ years &nbsp;·&nbsp; forever &amp; always</p>
+    <h1>To My <em>Dingus</em>,<br/>My David</h1>
+    <p class="hero-sub">
+      From a girl of 15 at a Wendy's window<br/>
+      to the woman who rode to you on a horse and carriage —<br/>
+      <em>you have always been some kind of wonderful.</em>
+    </p>
+    <p class="scroll-hint">↓ &nbsp; scroll &nbsp; ↓</p>
+  </div>
+</section>
+
+<!-- ══ OUR STORY ══ -->
+<section style="background:#fff;">
+  <div class="container">
+    <p class="section-label">How it all began</p>
+    <h2 class="section-title">Our Story — <em>The Real One</em></h2>
+    <div class="story-grid">
+
+      <div class="story-card">
+        <span class="year">15</span>
+        <h3>A Girl at Wendy's &amp; a Boy Who Couldn't Stay Away</h3>
+        <p>I was 15 years old. You found me. You "stalked" me — and I say that with the biggest smile on my face because you know exactly what I mean. Something about me caught your eye and you weren't letting go. I didn't know it then, but God was already writing our story. He just hadn't shown us the ending yet.</p>
+      </div>
+
+      <div class="story-card">
+        <span class="year">The Bet</span>
+        <h3>You Were a Bet — and You Won Everything</h3>
+        <p>Here is the part that still makes me laugh and cry at the same time. When I ran back into you — you were a <em>bet</em>. A childhood friend's dare. A wager. And look at us now. Whoever made that bet had no idea they were setting in motion the greatest love story of my life. God has a sense of humor, and I am so grateful He does.</p>
+      </div>
+
+      <div class="story-card">
+        <span class="year">Scooby</span>
+        <h3>From Scooby to the Man I Married</h3>
+        <p>I watched you change, David. I watched Scooby grow into the man who stood at the end of that aisle waiting for me. I watched you become a father — a <em>great</em> daddy. I watched you become a great man, quietly and steadily, the way real things grow. That transformation — I had a front row seat to all of it. And I have loved every single version of you along the way.</p>
+      </div>
+
+      <div class="story-card">
+        <span class="year">Two → One</span>
+        <h3>Two Became One</h3>
+        <p>The Bible says two become one. That is what happened to us. Two separate lives, two separate paths — and then God pulled them together and said <em>this</em>. This is it. We built a home. We built a family. We built something that storms have tried to tear apart and could not. Because what God joins together, no storm is strong enough to break — not if we choose each other.</p>
+      </div>
+
+      <div class="story-card">
+        <span class="year">Our Boys</span>
+        <h3>Three Sons — One in Heaven</h3>
+        <p>We have three beautiful boys, David. Three. Our hearts walking around outside our bodies. One of them — our precious baby — is in heaven now, watching over us, cheering us on. He is the reason we carry a piece of forever with us everywhere we go. He is the reason we know that love does not end. And the two still here need to see their parents choose each other. Every single day.</p>
+      </div>
+
+      <div class="story-card">
+        <span class="year">Right Now</span>
+        <h3>I Need You Now More Than Ever</h3>
+        <p>My body is fighting me every day. Broken hips. My back. My neck. A shattered pelvis and sacrum. Hernias. I am in a walker, David. I am fighting hard to stay standing — to keep going, to keep building something for us. And through all of it, the one thing I need more than anything is <em>you</em>. Not just beside me. <em>With</em> me. Pulling with me. Rising with me. The way you always did when you were fully, completely you.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ CARRIAGE ══ -->
+<section class="carriage-section">
+  <div class="container">
+    <p class="section-label">The day everything became real</p>
+    <h2 class="section-title">I Came to You on a <em>Horse &amp; Carriage</em></h2>
+    <img src="horse_carriage.jpg" alt="Horse and carriage wedding" class="carriage-img"/>
+    <p class="carriage-caption">
+      "Some Kind of Wonderful" was playing.<br/>
+      You were standing there waiting for me.<br/>
+      That was the best moment of my entire life.
+    </p>
+  </div>
+</section>
+
+<!-- ══ LETTER ══ -->
+<section class="letter-section">
+  <div class="container">
+    <p class="section-label">From my heart to yours</p>
+    <h2 class="section-title">My Letter <em>To You</em></h2>
+    <div class="letter-body">
+
+      <p>My Dingus,</p>
+
+      <p>Do you remember a girl at Wendy's? Fifteen years old, no idea what was coming — and a boy who just could not stay away. That was us before we even knew what us meant. And then life happened, and time passed, and somehow — the way only God can arrange things — you came back. Or maybe I came back. Either way, we found each other again. And this time we held on.</p>
+
+      <p>I need you to know something. I have watched you your whole life, David. I watched Scooby become the man who stood at the end of that aisle waiting for me. I watched you become a daddy — a <em>great</em> daddy. I watched you become a great man. Quietly. Steadily. The way real things grow. And I have been so proud of you. Every single version of you. Even the ones you were not proud of yourself.</p>
+
+      <p>The Bible says two become one. That is what happened to us. Two lives, two paths, one God who said — <em>them</em>. Those two. And we built something real. A home. A family. Three boys. One in heaven watching over us right now, I know it. And two here on earth who are watching us — watching to see if their parents still choose each other when it is hard. I want them to see us choose each other, David. I want that more than almost anything.</p>
+
+      <p>I know we have drifted. I know the weight of everything — the loss, the pain, the years of surviving — takes something out of a person. Out of a marriage. I am not here to point fingers. I am here because I miss you. I miss <em>my</em> man. I miss the way it felt when we were in sync, when we were one unit, two fronts united, pulling together toward the same thing.</p>
+
+      <p>My body is broken, David. More than most people know. I fight every single morning just to get up. And through all of it — all of it — you are still the safe place my heart reaches for. You are still the person I want next to me when it gets dark. You have always been that. You always will be.</p>
+
+      <p>I am not asking for perfect. I am asking for <em>present</em>. I am asking you to come back to me — not from far away, but from wherever inside yourself you have been hiding. Because I see you. I have always seen you. And what I see is worth every storm we have ever been through and every storm still coming.</p>
+
+      <p>Let's rise together, Dingus. Let's be the love story we always were — the one that started with a girl at a Wendy's window and a boy who just couldn't stay away. The one that ended up on a horse and carriage with "Some Kind of Wonderful" playing. <em>That</em> love story. <em>Our</em> love story.</p>
+
+      <p>I love you. I have always loved you. I will always love you.</p>
+
+      <p>Come back to me. I am right here.</p>
+
+      <p class="signature">
+        Forever your Baby,<br/>
+        Serena 💛
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MUSIC ══ -->
+<section class="music-section">
+  <div class="container">
+    <p class="section-label">The soundtrack of us</p>
+    <h2 class="section-title">Songs That Are <em>Ours</em></h2>
+    <div class="playlist">
+
+      <div class="track">
+        <p class="track-label">🎵 Grand Funk Railroad — "Some Kind of Wonderful"<br/><span style="font-size:0.9rem;opacity:0.8;">Our wedding song. You were waiting. I was coming to you on a horse and carriage. That moment lives in me forever.</span></p>
+        <iframe src="https://www.youtube.com/embed/O7B5jXYRy3Q" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+      </div>
+
+      <div class="track">
+        <p class="track-label">🎵 Brad Paisley — "Then"<br/><span style="font-size:0.9rem;opacity:0.8;">I loved you then. I love you even more now. That is the whole truth of us.</span></p>
+        <iframe src="https://www.youtube.com/embed/-AtaZ_NU_tU" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+      </div>
+
+      <div class="track">
+        <p class="track-label">🎵 Keith Urban — "Making Memories of Us"<br/><span style="font-size:0.9rem;opacity:0.8;">Every day we built something together. Every day still counts. We are not done making memories.</span></p>
+        <iframe src="https://www.youtube.com/embed/cSgL01PuAjc" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+      </div>
+
+      <div class="track">
+        <p class="track-label">🎵 Keith Urban — "Stupid Boy"<br/><span style="font-size:0.9rem;opacity:0.8;">For every time you didn't see what you had right in front of you. You always came back. That is what matters.</span></p>
+        <iframe src="https://www.youtube.com/embed/ehAEA-DLCjs" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ PROMISE ══ -->
+<section class="promise-section">
+  <div class="container">
+    <p class="section-label">My promise to you</p>
+    <h2 class="section-title">Let's <em>Rise Together</em></h2>
+    <p class="promise-text">
+      I am not giving up on us. Not now. Not ever.<br/>
+      <strong>We have been through too much to let the storms win.</strong><br/><br/>
+      We have a son in heaven cheering us on.<br/>
+      We have two boys here watching us choose love.<br/>
+      We have 21 years of proof that we are stronger together.<br/><br/>
+      You were a bet once, David.<br/>
+      <strong>Best bet anyone ever made.</strong><br/><br/>
+      So let's rise. Let's pull together.<br/>
+      Two becoming one — the way it was always meant to be.<br/><br/>
+      <em>Come back to me, Dingus. I am right here.</em>
+    </p>
+    <div class="heart-divider">♥ &nbsp; ♥ &nbsp; ♥</div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <span class="footer-heart">
+    "Some Kind of Wonderful" — that is what you are, David.<br/>
+    That is what you have always been.
+  </span>
+  <p>Made with every piece of my heart &nbsp;·&nbsp; From your Baby, Serena &nbsp;·&nbsp; Forever &amp; Always 💛</p>
+</footer>
+
+<!-- visit tracking (invisible) -->
+
+</body>
+</html>
