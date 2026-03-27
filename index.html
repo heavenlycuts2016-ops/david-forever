@@ -376,11 +376,74 @@
 </div>
 
 <script>
+var ttsUtterance = null;
+var ttsPaused = false;
+
+function getLetterText() {
+  var texts = [];
+  document.querySelectorAll('.story-card p, .letter-card p, .promise-text').forEach(function(el) {
+    texts.push(el.innerText);
+  });
+  return texts.join(' ');
+}
+
+function startTTS() {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  ttsUtterance = new SpeechSynthesisUtterance(getLetterText());
+  ttsUtterance.rate = 0.88;
+  ttsUtterance.pitch = 1.05;
+  ttsUtterance.volume = 1;
+  var voices = window.speechSynthesis.getVoices();
+  var preferred = voices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('samantha') || v.name.toLowerCase().includes('karen') || v.name.toLowerCase().includes('victoria') || v.name.toLowerCase().includes('zira'));
+  if (preferred) ttsUtterance.voice = preferred;
+  ttsUtterance.onend = function() {
+    document.getElementById('tts-bar').style.display = 'none';
+    // Auto-play song after reading finishes
+    var player = document.getElementById('floating-player');
+    if (player) {
+      player.style.display = 'block';
+      var iframe = player.querySelector('iframe');
+      if (iframe) iframe.src = iframe.src.replace('autoplay=0','autoplay=1');
+    }
+  };
+  window.speechSynthesis.speak(ttsUtterance);
+  document.getElementById('tts-bar').style.display = 'block';
+  ttsPaused = false;
+  document.getElementById('tts-pause-btn').textContent = 'Pause';
+}
+
+function pauseResumeTTS() {
+  if (!window.speechSynthesis) return;
+  if (ttsPaused) {
+    window.speechSynthesis.resume();
+    ttsPaused = false;
+    document.getElementById('tts-pause-btn').textContent = 'Pause';
+  } else {
+    window.speechSynthesis.pause();
+    ttsPaused = true;
+    document.getElementById('tts-pause-btn').textContent = 'Resume';
+  }
+}
+
+function stopTTS() {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  document.getElementById('tts-bar').style.display = 'none';
+}
+
 function checkWord() {
   var val = document.getElementById('lockInput').value.trim().toLowerCase();
   if (val === 'forever') {
     document.getElementById('lock-screen').classList.add('hidden');
     document.body.style.overflow = '';
+    setTimeout(function() {
+      if (window.speechSynthesis.getVoices().length === 0) {
+        window.speechSynthesis.onvoiceschanged = function() { startTTS(); };
+      } else {
+        startTTS();
+      }
+    }, 1200);
   } else {
     document.getElementById('lockError').textContent = 'That\'s not it, love. Try again. ♥';
     document.getElementById('lockInput').value = '';
@@ -392,6 +455,13 @@ document.getElementById('lockInput').addEventListener('keydown', function(e) {
 });
 document.body.style.overflow = 'hidden';
 </script>
+
+<!-- ══ TTS BAR ══ -->
+<div id="tts-bar" style="display:none; position:sticky; top:0; z-index:999; background:rgba(20,10,0,0.97); padding:10px 20px; text-align:center; border-bottom:1px solid rgba(201,168,76,0.3);">
+  <span style="color:#f5e6c8; font-size:0.85rem; font-style:italic; margin-right:10px;">🔊 Reading to you, David...</span>
+  <button id="tts-pause-btn" onclick="pauseResumeTTS()" style="background:linear-gradient(135deg,#c9a84c,#8b6914); color:#fff; border:none; padding:7px 20px; border-radius:50px; font-size:0.85rem; cursor:pointer; margin:0 4px;">Pause</button>
+  <button onclick="stopTTS()" style="background:linear-gradient(135deg,#c9a84c,#8b6914); color:#fff; border:none; padding:7px 20px; border-radius:50px; font-size:0.85rem; cursor:pointer; margin:0 4px;">Stop</button>
+</div>
 
 <!-- ══ HERO ══ -->
 <section class="hero">
