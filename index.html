@@ -443,11 +443,13 @@ window.addEventListener('load', function() {
 });
 </script>
 
-<!-- ══ TTS BAR ══ -->
-<div id="tts-bar" style="display:none; position:sticky; top:0; z-index:999; background:rgba(20,10,0,0.97); padding:10px 20px; text-align:center; border-bottom:1px solid rgba(201,168,76,0.3);">
-  <span style="color:#f5e6c8; font-size:0.85rem; font-style:italic; margin-right:10px;">🔊 Reading to you, David...</span>
-  <button id="tts-pause-btn" onclick="pauseResumeTTS()" style="background:linear-gradient(135deg,#c9a84c,#8b6914); color:#fff; border:none; padding:7px 20px; border-radius:50px; font-size:0.85rem; cursor:pointer; margin:0 4px;">Pause</button>
-  <button onclick="stopTTS()" style="background:linear-gradient(135deg,#c9a84c,#8b6914); color:#fff; border:none; padding:7px 20px; border-radius:50px; font-size:0.85rem; cursor:pointer; margin:0 4px;">Stop</button>
+<!-- ══ AUDIO BAR ══ -->
+<div style="position:sticky; top:0; z-index:999; background:rgba(20,10,0,0.97); padding:12px 20px; text-align:center; border-bottom:1px solid rgba(201,168,76,0.3);">
+  <span style="color:#f5e6c8; font-size:0.85rem; font-style:italic; margin-right:10px;">🔊 Tap to listen to your letter, David</span><br/>
+  <audio id="letterAudio" controls style="width:100%;max-width:480px;margin-top:8px;outline:none;">
+    <source src="david_letter.mp3" type="audio/mpeg" />
+    Your browser does not support the audio element.
+  </audio>
 </div>
 
 <!-- ══ HERO ══ -->
