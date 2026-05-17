@@ -371,17 +371,7 @@
 </head>
 <body>
 
-<!-- ══ LOCK SCREEN ══ -->
-<div id="lock-screen">
-  <div class="lock-box">
-    <div class="lock-hearts">♥ ♥ ♥</div>
-    <h1 class="lock-title">This is for <em>you</em>,<br/>David</h1>
-    <p class="lock-sub">Only one person in this world knows the word that opens this.<br/>If that is you — type it below.</p>
-    <input id="lockInput" type="text" placeholder="Enter the word..." autocomplete="off" />
-    <button id="lockBtn" onclick="checkWord()">Open the Letter ♥</button>
-    <p id="lockError"></p>
-  </div>
-</div>
+
 
 <script>
 var ttsUtterance = null;
@@ -440,28 +430,17 @@ function stopTTS() {
   document.getElementById('tts-bar').style.display = 'none';
 }
 
-function checkWord() {
-  var val = document.getElementById('lockInput').value.trim().toLowerCase();
-  if (val === 'forever') {
-    document.getElementById('lock-screen').classList.add('hidden');
-    document.body.style.overflow = '';
-    setTimeout(function() {
-      if (window.speechSynthesis.getVoices().length === 0) {
-        window.speechSynthesis.onvoiceschanged = function() { startTTS(); };
-      } else {
-        startTTS();
-      }
-    }, 1200);
-  } else {
-    document.getElementById('lockError').textContent = 'That\'s not it, love. Try again. ♥';
-    document.getElementById('lockInput').value = '';
-    document.getElementById('lockInput').focus();
-  }
-}
-document.getElementById('lockInput').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') checkWord();
+// Auto-open letter on page load
+document.body.style.overflow = '';
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    if (window.speechSynthesis.getVoices().length === 0) {
+      window.speechSynthesis.onvoiceschanged = function() { startTTS(); };
+    } else {
+      startTTS();
+    }
+  }, 1200);
 });
-document.body.style.overflow = 'hidden';
 </script>
 
 <!-- ══ TTS BAR ══ -->
